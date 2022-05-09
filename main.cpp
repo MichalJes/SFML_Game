@@ -5,7 +5,6 @@
 #include <iostream>
 #include <string>
 
-
 int main() {
     // Window setup
     sf::RenderWindow mainWindow(sf::VideoMode(800, 600), "This is main window", sf::Style::Titlebar | sf::Style::Close);

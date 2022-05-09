@@ -1,14 +1,11 @@
-#include <iostream>
 #include "Game.h"
 
-
+#include <iostream>
 
 void Game::initVariables() {
-
 }
 
 void Game::initWindow() {
-
 }
 
 Game::Game() {
