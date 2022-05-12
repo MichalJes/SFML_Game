@@ -37,7 +37,7 @@
     },
     {
       "type": "cppbuild",
-      "label": "C/C++: g++.exe build all files in directory",
+      "label": "C/C++: g++.exe build whole project",
       "command": "C:/mingw32/bin/g++.exe",
       "args": [
         "-I",
@@ -49,7 +49,7 @@
         "${fileDirname}\\**.cpp",
         "${fileDirname}\\**.h",
         "-o",
-        "${fileDirname}\\${fileBasenameNoExtension}.exe",
+        "${fileDirname}\\main.exe",
         "-L",
         "${fileDirname}\\SFML-2.5.1\\lib",
         "-lsfml-graphics-s",
