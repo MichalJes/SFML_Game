@@ -11,7 +11,6 @@ int main() {
     mainWindow.setFramerateLimit(30);
     sf::Event ev;
 
-
     // Load textures
     texture.background.loadFromFile("");
     texture.pipe.loadFromFile("");

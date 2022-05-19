@@ -2,7 +2,7 @@
   "tasks": [
     {
       "type": "cppbuild",
-      "label": "C/C++: g++.exe build only active file",
+      "label": "[Windows] C/C++: g++.exe build only active file",
       "command": "C:/mingw32/bin/g++.exe",
       "args": [
         "-I",
@@ -39,7 +39,7 @@
     },
     {
       "type": "cppbuild",
-      "label": "C/C++: g++.exe build whole project",
+      "label": "[Windows] C/C++: g++.exe build whole project",
       "command": "C:/mingw32/bin/g++.exe",
       "args": [
         "-I",
