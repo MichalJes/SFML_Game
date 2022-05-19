@@ -2,17 +2,17 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "[Windows] g++.exe - Build and debug active file",
+        "name": "[Manjaro] g++.exe - Build and debug active file",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+        "program": "${fileDirname}\\${fileBasenameNoExtension}",
         "args": [],
         "stopAtEntry": true,
         "cwd": "${fileDirname}",
         "environment": [],
         "externalConsole": false,
         "MIMode": "gdb",
-        "miDebuggerPath": "C:\\mingw32\\bin\\gdb.exe",
+        "miDebuggerPath": "gdb",
         "setupCommands": [
           {
             "description": "Enable pretty-printing for gdb",
@@ -20,7 +20,7 @@
             "ignoreFailures": true
           }
         ],
-          "preLaunchTask": "[Windows] C/C++: g++.exe build all file"
+          "preLaunchTask": "[Manjaro] C/C++: g++.exe build whole project"
       }
     ]
   }

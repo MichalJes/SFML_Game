@@ -3,17 +3,17 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/SFML-2.5.1/include"
+                "${workspaceFolder}"
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            "compilerPath": "C:\\mingw32\\bin\\gcc.exe",
+            "compilerPath": "g++",
             "cStandard": "c11",
             "cppStandard": "gnu++14",
-            "intelliSenseMode": "windows-gcc-x86",
+            "intelliSenseMode": "linux-clang-x64",
             "browse": {
                 "path": [
                     "${workspaceFolder}"
@@ -22,6 +22,7 @@
                 "databaseFilename": ""
             }
         }
+
     ],
     "version": 4
 }
