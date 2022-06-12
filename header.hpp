@@ -1,8 +1,7 @@
-#include <iostream>
-#include <string>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-
+#include <iostream>
+#include <string>
 
 enum gameState { start,
                  going,
@@ -30,3 +29,10 @@ typedef struct game_s {
     sf::Sprite endGame;
     sf::Sprite background[3];
 } game_t;
+
+bool collisionCheck(float xCord1, float yCord1, float width1, float height1, float xCord2, float yCord2, float width2, float height2) {
+    if (xCord1 + width1 > xCord2 && xCord2 + width2 > xCord1 && yCord1 + height1 > yCord2 && yCord2 + height2 > yCord1) {
+        return true;
+    }
+    return false;
+}
