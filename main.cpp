@@ -26,12 +26,8 @@ int main() {
     game.textStart.setFont(game.font);
     game.textStart.setFillColor(sf::Color::Blue);
     game.textStart.setCharacterSize(50);
-    game.textStart.setPosition(500, 250);
     game.textStart.setOrigin(game.textStart.getLocalBounds().width / 2, 0);
-    game.textScore.setFont(game.font);
-    game.textScore.setFillColor(sf::Color::White);
-    game.textScore.setCharacterSize(50);
-    game.textScore.move(50, 0);
+    game.textStart.setPosition(500, 250);
     game.background[0].setTexture(texture.background);
     game.background[1].setTexture(texture.background);
     game.background[2].setTexture(texture.background);
@@ -40,6 +36,14 @@ int main() {
     game.background[2].setScale(1.15, 1.17);
     game.background[1].setPosition(300, 0);
     game.background[2].setPosition(600, 0);
+    game.textScore.setFont(game.font);
+    game.textScore.setFillColor(sf::Color::White);
+    game.textScore.setCharacterSize(50);
+    game.textScore.move(50, 0);
+    game.endGame.setTexture(texture.endGame);
+    game.endGame.setOrigin(200/2,50/2);
+    game.endGame.setPosition(500,125);
+    game.endGame.setScale(2,2);
 
     // Pipes vector
     std::vector<sf::Sprite> pipes;
@@ -58,6 +62,12 @@ int main() {
         // Character texture
         bird.sprite.setTexture(texture.character);
 
+        // Character move
+        if(game.curentGameState==going){
+            bird.sprite.move(0,bird.vSpeed);
+            bird.vSpeed+=0.5;
+        }
+        
         // Character boundaries
         if (game.curentGameState == going) {
             if (birdY > 600) {
@@ -118,9 +128,21 @@ int main() {
                     pipeY = (*j).getPosition().y - pipeHeight;
                 }
                 if (collisionCheck(birdX, birdY, birdWidth, birdHeight, pipeX, pipeY, pipeWidth, pipeHeight)) {
-                    game.curentGameState == end;
+                    game.curentGameState = end;
                 }
             }
+        }
+
+        // Pipe remove
+        if (game.frames % 100 == 0) {
+            std::vector<sf::Sprite>::iterator sj = pipes.begin();
+            std::vector<sf::Sprite>::iterator ej = pipes.begin();
+            for (; ej != pipes.end(); ej++) {
+                if ((*ej).getPosition().x > -104) {
+                    break;
+                }
+            }
+            pipes.erase(sj, ej);
         }
 
         // Event capture
@@ -137,6 +159,10 @@ int main() {
                         if (game.curentGameState == going) {
                             bird.vSpeed = -15;
                         }
+
+                        if (game.curentGameState==start){
+                            game.curentGameState=going;
+                        }
                     } else if (ev.key.code == sf::Keyboard::S && game.curentGameState == end) {
                         bird.sprite.setPosition(250, 300);
                         game.score = 0;
@@ -148,24 +174,27 @@ int main() {
 
         // Update frame
         mainWindow.clear();
+
+        mainWindow.draw(game.background[0]);
+        mainWindow.draw(game.background[1]);
+        mainWindow.draw(game.background[2]);
         mainWindow.draw(bird.sprite);
 
         for (std::vector<sf::Sprite>::iterator j = pipes.begin(); j != pipes.end(); j++) {
             mainWindow.draw(*j);
         }
 
-        mainWindow.draw(game.background[0]);
-        mainWindow.draw(game.background[1]);
-        mainWindow.draw(game.background[2]);
-
         mainWindow.draw(game.textScore);
 
         if (game.curentGameState == end) {
             mainWindow.draw(game.endGame);
+            mainWindow.draw(game.textStart);
         }
 
         // Render
         mainWindow.display();
+
+        game.frames++;
     }
     return 0;
 }

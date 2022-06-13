@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
+#include <vector>
 
 enum gameState { start,
                  going,
@@ -20,14 +21,14 @@ typedef struct bird_s {
 } bird_t;
 
 typedef struct game_s {
-    gameState curentGameState = start;
-    sf::Font font;
-    sf::Text textScore;
-    sf::Text textStart;
     int score = 0;
     int frames = 0;
+    gameState curentGameState = start;
     sf::Sprite endGame;
     sf::Sprite background[3];
+    sf::Text textScore;
+    sf::Text textStart;
+    sf::Font font;
 } game_t;
 
 bool collisionCheck(float xCord1, float yCord1, float width1, float height1, float xCord2, float yCord2, float width2, float height2) {
