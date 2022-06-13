@@ -20,7 +20,9 @@
             "ignoreFailures": true
           }
         ],
+
           "preLaunchTask": "[Manjaro] C/C++: g++.exe build whole project"
+
       }
     ]
   }
