@@ -1,7 +1,8 @@
-#include "header.hpp"
-//nie wiem czy vs to chce ale ja se wkleje bo potrzebuje
-#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+
+#include "header.hpp"
+
 textures_t texture;
 bird_t bird;
 game_t game;
@@ -43,9 +44,9 @@ int main() {
     game.textScore.setCharacterSize(50);
     game.textScore.move(50, 0);
     game.endGame.setTexture(texture.endGame);
-    game.endGame.setOrigin(200/2,50/2);
-    game.endGame.setPosition(500,125);
-    game.endGame.setScale(2,2);
+    game.endGame.setOrigin(200 / 2, 50 / 2);
+    game.endGame.setPosition(500, 125);
+    game.endGame.setScale(2, 2);
 
     // Pipes vector
     std::vector<sf::Sprite> pipes;
@@ -65,11 +66,11 @@ int main() {
         bird.sprite.setTexture(texture.character);
 
         // Character move
-        if(game.curentGameState==going){
-            bird.sprite.move(0,bird.vSpeed);
-            bird.vSpeed+=0.5;
+        if (game.curentGameState == going) {
+            bird.sprite.move(0, bird.vSpeed);
+            bird.vSpeed += 0.5;
         }
-        
+
         // Character boundaries
         if (game.curentGameState == going) {
             if (birdY > 600) {
@@ -162,8 +163,8 @@ int main() {
                             bird.vSpeed = -15;
                         }
 
-                        if (game.curentGameState==start){
-                            game.curentGameState=going;
+                        if (game.curentGameState == start) {
+                            game.curentGameState = going;
                         }
                     } else if (ev.key.code == sf::Keyboard::S && game.curentGameState == end) {
                         bird.sprite.setPosition(250, 300);
