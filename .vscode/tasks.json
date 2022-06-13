@@ -2,26 +2,18 @@
   "tasks": [
     {
       "type": "cppbuild",
-      "label": "C/C++: g++.exe build only active file",
-      "command": "C:/mingw32/bin/g++.exe",
+      "label": "[Manjaro] C/C++: g++.exe build only active file",
+      "command": "g++",
       "args": [
-        "-I",
-        "${fileDirname}",
-        "-I",
-        "${fileDirname}\\SFML-2.5.1\\include",
-        "-DSFML_STATIC",
         "-g",
         "${file}",
         "-o",
-        "${fileDirname}\\${fileBasenameNoExtension}.exe",
-        "-L",
-        "${fileDirname}\\SFML-2.5.1\\lib",
-        "-lsfml-graphics-s",
-        "-lsfml-window-s",
-        "-lsfml-system-s",
-        "-lopengl32",
-        "-lwinmm",
-        "-lgdi32"
+        "${fileDirname}//${fileBasenameNoExtension}",
+        "-lsfml-graphics",
+        "-lsfml-window",
+        "-lsfml-audio",
+        "-lsfml-network",
+        "-lsfml-system"
       ],
       "options": {
         "cwd": "${fileDirname}"
@@ -33,31 +25,23 @@
         "kind": "build",
         "isDefault": true
       },
-      "detail": "compiler: C:\\mingw32\\bin\\g++.exe"
+      "detail": "compiler: g++"
     },
     {
       "type": "cppbuild",
-      "label": "C/C++: g++.exe build all files in directory",
-      "command": "C:/mingw32/bin/g++.exe",
+      "label": "[Manjaro] C/C++: g++.exe build whole project",
+      "command": "g++",
       "args": [
-        "-I",
-        "${fileDirname}",
-        "-I",
-        "${fileDirname}\\SFML-2.5.1\\include",
-        "-DSFML_STATIC",
         "-g",
-        "${fileDirname}\\**.cpp",
-        "${fileDirname}\\**.h",
+        "${fileDirname}//**.cpp",
+        "${fileDirname}//**.hpp",
         "-o",
-        "${fileDirname}\\${fileBasenameNoExtension}.exe",
-        "-L",
-        "${fileDirname}\\SFML-2.5.1\\lib",
-        "-lsfml-graphics-s",
-        "-lsfml-window-s",
-        "-lsfml-system-s",
-        "-lopengl32",
-        "-lwinmm",
-        "-lgdi32"
+        "${fileDirname}//${fileBasenameNoExtension}",
+        "-lsfml-graphics",
+        "-lsfml-window",
+        "-lsfml-audio",
+        "-lsfml-network",
+        "-lsfml-system"
       ],
       "options": {
         "cwd": "${fileDirname}"
@@ -69,7 +53,7 @@
         "kind": "build",
         "isDefault": true
       },
-      "detail": "compiler: C:\\mingw32\\bin\\g++.exe"
+      "detail": "compiler: g++"
     }
   ],
   "version": "2.0.0"

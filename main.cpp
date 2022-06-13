@@ -1,108 +1,203 @@
-#include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 
-class CustomRectangleShape : public sf::RectangleShape {
-public:
-    CustomRectangleShape(const sf::Vector2f &size, const sf::Vector2f &position,
-                         const sf::RenderWindow &window)
-        : sf::RectangleShape(size), window_(window) {
-        setPosition(position);
-    };
+#include "header.hpp"
 
-void setSpeed(int x, int y, int rotation) {
-        speed_x_ = x;
-        speed_y_ = y;
-        speed_rotation_ = rotation;
-}
-
-void animate(const sf::Time &elapsed) {
-        handleEvents();
-
-        auto bounding_box = getGlobalBounds();
-        if (bounding_box.left < 0) {
-            speed_x_ = std::abs(speed_x_);
-        }
-        else if (bounding_box.left + bounding_box.width > bounds_.left + bounds_.width) {
-            speed_x_ = -std::abs(speed_x_);
-        }
-        if (bounding_box.top < 0) {
-            speed_y_ = std::abs(speed_y_);
-        }
-        else if (bounding_box.top + bounding_box.height > bounds_.top + bounds_.height) {
-            speed_y_ = -std::abs(speed_y_);
-        }
-
-        auto seconds = elapsed.asSeconds();
-        move(speed_x_ * seconds, speed_y_ * seconds);
-        rotate(speed_rotation_ * seconds);
-}
-
-void handleEvents() {
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            auto bounding_box = getGlobalBounds();
-            auto position = sf::Mouse::getPosition(window_);
-            if (bounding_box.contains(position.x, position.y)) {
-                speed_x_ = 0;
-                speed_y_ = 0;
-            }
-        }
-}
-
-void setBounds(const sf::IntRect &bounds) {
-        bounds_ = bounds;
-}
-
-void setBounds(int left, int width, int top, int height) {
-        bounds_ = sf::IntRect(left, top, width, height);
-}
-
-private:
-    const sf::RenderWindow &window_;
-    int speed_x_ = 0;
-    int speed_y_ = 0;
-    int speed_rotation_ = 0;
-    sf::IntRect bounds_;
-};
+textures_t texture;
+bird_t bird;
+game_t game;
 
 int main() {
-    // stworzenie okna
-    sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
+    // Window setup
+    sf::RenderWindow mainWindow(sf::VideoMode(800, 600), "Kalina Zalewska Flappy", sf::Style::Titlebar | sf::Style::Close);
+    mainWindow.setFramerateLimit(30);
+    sf::Event ev;
 
-    // tworzymy prostokąt wg kreatora z klasy
-    CustomRectangleShape rectangle(sf::Vector2f(120.0, 60.0),
-                                   sf::Vector2f(300.0, 300.0),
-                                   window);
-    rectangle.setFillColor(sf::Color(100, 50, 250));
-    //ustawienie prędskosci
-    rectangle.setSpeed(100, 100, 10);
+    // Load textures
+    texture.background.loadFromFile("./textures/back.png");
+    texture.pipe.loadFromFile("./textures/pipe.png");
+    texture.endGame.loadFromFile("./textures/end.png");
+    texture.character.loadFromFile("./textures/bird.png");
 
-    rectangle.setBounds(0, window.getSize().x, 0, window.getSize().y);
+    // SetUp bird
+    bird.sprite.setPosition(250, 300);
+    bird.sprite.setScale(2, 2);
 
-    sf::Clock clock;//zegar przed petla
+    // SetUp game instance
+    game.font.loadFromFile("./fonts/COMIC.TTF");
+    game.textStart.setString("Press S to start");
+    game.textStart.setFont(game.font);
+    game.textStart.setFillColor(sf::Color::Blue);
+    game.textStart.setCharacterSize(50);
+    game.textStart.setOrigin(game.textStart.getLocalBounds().width / 2, 0);
+    game.textStart.setPosition(500, 250);
+    game.background[0].setTexture(texture.background);
+    game.background[1].setTexture(texture.background);
+    game.background[2].setTexture(texture.background);
+    game.background[0].setScale(1.15, 1.17);
+    game.background[1].setScale(1.15, 1.17);
+    game.background[2].setScale(1.15, 1.17);
+    game.background[1].setPosition(300, 0);
+    game.background[2].setPosition(600, 0);
+    game.textScore.setFont(game.font);
+    game.textScore.setFillColor(sf::Color::White);
+    game.textScore.setCharacterSize(50);
+    game.textScore.move(50, 0);
+    game.endGame.setTexture(texture.endGame);
+    game.endGame.setOrigin(200 / 2, 50 / 2);
+    game.endGame.setPosition(500, 125);
+    game.endGame.setScale(2, 2);
 
-    // run the program as long as the window is open
-    while (window.isOpen()) {
-        // check all the window's events that were triggered since the last iteration of the loop
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            // "close requested" event: we close the window and kohać dziekana
-            if (event.type == sf::Event::Closed)
-                window.close();
+    // Pipes vector
+    std::vector<sf::Sprite> pipes;
+
+    // App loop
+    while (mainWindow.isOpen()) {
+        // Current score loop
+        game.textScore.setString(std::to_string(game.score));
+
+        // Character update
+        float birdY = bird.sprite.getPosition().y;
+        float birdX = bird.sprite.getPosition().x;
+        float birdWidth = 34 * bird.sprite.getScale().x;
+        float birdHeight = 24 * bird.sprite.getScale().y;
+
+        // Character texture
+        bird.sprite.setTexture(texture.character);
+
+        // Character move
+        if (game.curentGameState == going) {
+            bird.sprite.move(0, bird.vSpeed);
+            bird.vSpeed += 0.5;
         }
 
-        // clear the window with black color
-        window.clear(sf::Color::Black);
+        // Character boundaries
+        if (game.curentGameState == going) {
+            if (birdY > 600) {
+                bird.vSpeed = 0;
+                game.curentGameState = end;
+            } else if (birdY < 0) {
+                bird.sprite.setPosition(250, 0);
+                bird.vSpeed = 0;
+            }
+        }
 
-        sf::Time elapsed = clock.restart();
+        // Generate Pipe
+        if (game.curentGameState == going && game.frames % 100 == 0) {
+            int d = rand() % 300;
 
-        rectangle.animate(elapsed);
+            sf::Sprite upperPipe;
+            upperPipe.setTexture(texture.pipe);
+            upperPipe.setPosition(1000, d);
+            upperPipe.setScale(2, -2);
 
-        // draw everything here...
-        window.draw(rectangle);
+            sf::Sprite lowerPipe;
+            lowerPipe.setTexture(texture.pipe);
+            lowerPipe.setPosition(1000, d + 200);
+            lowerPipe.setScale(2, 2);
 
-        // end the current frame
-        window.display();
+            pipes.push_back(lowerPipe);
+            pipes.push_back(upperPipe);
+        }
+
+        // Score Count
+        for (std::vector<sf::Sprite>::iterator j = pipes.begin(); j != pipes.end(); j++) {
+            if (game.curentGameState == going && (*j).getPosition().x == 250) {
+                game.score++;
+                break;
+            }
+        }
+
+        // Moving pipes
+        if (game.curentGameState == going) {
+            for (std::vector<sf::Sprite>::iterator j = pipes.begin(); j != pipes.end(); j++) {
+                (*j).move(-3, 0);
+            }
+        }
+
+        // Collision check
+        if (game.curentGameState == going) {
+            for (std::vector<sf::Sprite>::iterator j = pipes.begin(); j != pipes.end(); j++) {
+                float pipeX, pipeY, pipeWidth, pipeHeight;
+                if ((*j).getScale().y > 0) {
+                    pipeX = (*j).getPosition().x;
+                    pipeY = (*j).getPosition().y;
+                    pipeWidth = 52 * (*j).getScale().x;
+                    pipeHeight = 320 * (*j).getScale().y;
+                } else {
+                    pipeWidth = 52 * (*j).getScale().x;
+                    pipeHeight = -320 * (*j).getScale().y;
+                    pipeX = (*j).getPosition().x;
+                    pipeY = (*j).getPosition().y - pipeHeight;
+                }
+                if (collisionCheck(birdX, birdY, birdWidth, birdHeight, pipeX, pipeY, pipeWidth, pipeHeight)) {
+                    game.curentGameState = end;
+                }
+            }
+        }
+
+        // Pipe remove
+        if (game.frames % 100 == 0) {
+            std::vector<sf::Sprite>::iterator sj = pipes.begin();
+            std::vector<sf::Sprite>::iterator ej = pipes.begin();
+            for (; ej != pipes.end(); ej++) {
+                if ((*ej).getPosition().x > -104) {
+                    break;
+                }
+            }
+            pipes.erase(sj, ej);
+        }
+
+        // Event capture
+        while (mainWindow.pollEvent(ev)) {
+            switch (ev.type) {
+                case sf::Event::Closed:
+                    mainWindow.close();
+                    break;
+                case sf::Event::KeyPressed:
+                    if (ev.key.code == sf::Keyboard::Escape) {
+                        mainWindow.close();
+                        break;
+                    } else if (ev.key.code == sf::Keyboard::Space) {
+                        if (game.curentGameState == going) {
+                            bird.vSpeed = -15;
+                        }
+
+                        if (game.curentGameState == start) {
+                            game.curentGameState = going;
+                        }
+                    } else if (ev.key.code == sf::Keyboard::S && game.curentGameState == end) {
+                        bird.sprite.setPosition(250, 300);
+                        game.score = 0;
+                        pipes.clear();
+                        game.curentGameState = start;
+                    }
+            }
+        }
+
+        // Update frame
+        mainWindow.clear();
+
+        mainWindow.draw(game.background[0]);
+        mainWindow.draw(game.background[1]);
+        mainWindow.draw(game.background[2]);
+        mainWindow.draw(bird.sprite);
+
+        for (std::vector<sf::Sprite>::iterator j = pipes.begin(); j != pipes.end(); j++) {
+            mainWindow.draw(*j);
+        }
+
+        mainWindow.draw(game.textScore);
+
+        if (game.curentGameState == end) {
+            mainWindow.draw(game.endGame);
+            mainWindow.draw(game.textStart);
+        }
+
+        // Render
+        mainWindow.display();
+
+        game.frames++;
     }
-
     return 0;
 }
