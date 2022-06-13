@@ -9,7 +9,7 @@ game_t game;
 
 int main() {
     // Window setup
-    sf::RenderWindow mainWindow(sf::VideoMode(800, 600), "This is main window", sf::Style::Titlebar | sf::Style::Close);
+    sf::RenderWindow mainWindow(sf::VideoMode(800, 600), "Kalina Zalewska Flappy", sf::Style::Titlebar | sf::Style::Close);
     mainWindow.setFramerateLimit(30);
     sf::Event ev;
 
