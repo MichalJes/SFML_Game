@@ -1,5 +1,7 @@
 #include "header.hpp"
-
+//nie wiem czy vs to chce ale ja se wkleje bo potrzebuje
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 textures_t texture;
 bird_t bird;
 game_t game;
